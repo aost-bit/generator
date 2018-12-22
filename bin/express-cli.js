@@ -49,10 +49,11 @@ program
   .version(VERSION, '    --version')
   .usage('[options] [dir]')
   .option('-e, --ejs', 'add ejs engine support', renamedOption('--ejs', '--view=ejs'))
+  .option('    --ect', 'add ect engine support', renamedOption('--ect', '--view=ect'))
   .option('    --pug', 'add pug engine support', renamedOption('--pug', '--view=pug'))
   .option('    --hbs', 'add handlebars engine support', renamedOption('--hbs', '--view=hbs'))
   .option('-H, --hogan', 'add hogan.js engine support', renamedOption('--hogan', '--view=hogan'))
-  .option('-v, --view <engine>', 'add view <engine> support (dust|ejs|hbs|hjs|jade|pug|twig|vash) (defaults to jade)')
+  .option('-v, --view <engine>', 'add view <engine> support (dust|ejs|ect|hbs|hjs|jade|pug|twig|vash) (defaults to jade)')
   .option('    --no-view', 'use static html instead of view engine')
   .option('-c, --css <engine>', 'add stylesheet <engine> support (less|stylus|compass|sass) (defaults to plain css)')
   .option('    --git', 'add .gitignore')
@@ -238,6 +239,9 @@ function createApplication (name, dir) {
       case 'vash':
         copyTemplateMulti('views', dir + '/views', '*.vash')
         break
+      case 'ect':
+        copyTemplateMulti('views', dir + '/views', '*.ect')
+        break
     }
   } else {
     // Copy extra public files
@@ -313,6 +317,14 @@ function createApplication (name, dir) {
     case 'vash':
       app.locals.view = { engine: 'vash' }
       pkg.dependencies.vash = '~0.12.4'
+      break
+    case 'ect':
+      app.locals.modules.ect = 'ect'
+      app.locals.view = {
+        engine: 'ect',
+        render: 'ect({ watch: true, root: path.join(__dirname, \'views\'), ext : \'.ect\' }).render'
+      }
+      pkg.dependencies.ect = '~0.5.9'
       break
     default:
       app.locals.view = false
@@ -457,6 +469,7 @@ function main () {
     if (program.hbs) program.view = 'hbs'
     if (program.hogan) program.view = 'hjs'
     if (program.pug) program.view = 'pug'
+    if (program.ect) program.view = 'ect'
   }
 
   // Default view engine
