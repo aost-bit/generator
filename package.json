@@ -1,5 +1,5 @@
 {
-  "name": "bit/generator",
+  "name": "bit-generator",
   "description": "Express' application generator",
   "version": "0.1.0",
   "author": "Satoru AOYAMA <aost.bit@gmail.com>",
